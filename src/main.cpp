@@ -1,7 +1,18 @@
 #include <Arduino.h>
+#include <NXPMotionSense.h>
+#include <MahonyAHRS.h>
+#include <Wire.h>
+#include <EEPROM.h>
+
+
+NXPMotionSense imu;
+Mahony filter;
+
 
 void setup() {
-  // put your setup code here, to run once:
+  Serial.begin(9600);
+  imu.begin();
+  filter.begin(100);
 }
 
 void loop() {
