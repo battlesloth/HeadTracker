@@ -6,11 +6,12 @@
                 "C:\\Users\\recto\\AppData\\Local\\Arduino15\\packages\\TeeOnArdu\\hardware\\avr\\1.0.3\\**",
                 "C:\\Users\\recto\\AppData\\Local\\Arduino15\\packages\\adafruit\\hardware\\samd\\1.2.9\\**",
                 "C:\\Program Files (x86)\\Arduino\\tools\\**",
-                "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\**",
-                "C:\\Program Files (x86)\\Arduino\\hardware",
-                "C:\\Program Files (x86)\\Arduino\\libraries\\**",
+                "C:\\Program Files (x86)\\Teensyduino\\hardware\\arduino\\avr\\**",
+                "C:\\Program Files (x86)\\Teensyduino\\hardware\\teensy\\avr\\libraries\\**",
+                "C:\\Program Files (x86)\\Teensyduino\\hardware",
+                "C:\\Program Files (x86)\\Teensyduino\\libraries\\**",
                 "C:\\Users\\recto\\OneDrive\\Documents\\Arduino\\libraries\\**",
-                "C:\\Users\\jeffrey.rector\\Documents\\Arduino\\libraries\\**",
+                "C:\\Users\\dirtknap\\Documents\\Arduino\\libraries\\**",
                 "${workspaceFolder}/**"
             ],
             "defines": [
@@ -34,9 +35,10 @@
             ],
             "browse": {
                 "path": [
-                    "C:/Program Files (x86)/Arduino/hardware",
-                    "C:/Program Files (x86)/Arduino/libraries",
+                    "C:/Program Files (x86)/Teensyduino/hardware",
+                    "C:/Program Files (x86)/Teensyduino/libraries",
                     "C:/Users/recto/OneDrive/Documents/Arduino/libraries",
+                    "C:/Users/dirtknap/Documents/Arduino/libraries",
                     "${workspaceRoot}"
                 ],
                 "limitSymbolsToIncludedHeaders": true,

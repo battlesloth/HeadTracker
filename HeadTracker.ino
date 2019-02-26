@@ -5,6 +5,10 @@
 NXPMotionSense imu;
 SF fusion;
 
+float gx, gy, gz, ax, ay, az, mx, my, mz, temp;
+float pitch, roll, yaw;
+float deltat;
+
 
 void setup() {
   Serial.begin(9600);
