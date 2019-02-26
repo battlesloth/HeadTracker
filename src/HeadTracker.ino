@@ -13,7 +13,10 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  //Joystick.X(value);            // "value" is from 0 to 1023
+  //Joystick.Y(value);            //   512 is resting position
+  //Joystick.Z(value);
+  //Joystick.Zrotate(value);
 }
 
 
