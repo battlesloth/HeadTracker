@@ -1,0 +1,4 @@
+{
+    "sketch": "src\\HeadTracker.ino",
+    "board": "arduino:avr:uno"
+}
