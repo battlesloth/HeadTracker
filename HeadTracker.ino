@@ -5,7 +5,7 @@
 #include <EEPROM.h>
 
 NXPMotionSense imu;
-SF fusion;
+Mahony filter;
 
 float gx, gy, gz, ax, ay, az, mx, my, mz, temp;
 float pitch, roll, yaw;
@@ -20,14 +20,17 @@ const int headingRange = 70;
 const int pitchRange = 40;
 const int rollRange = 40;
 
-
+// 3.14159 /180.0
+const float gyroScale = 0.017453;
 
 float pitchFactor;
 float rollFactor;
+float headingFactor;
 
 void setup() {
   Serial.begin(9600);
   imu.begin();
+  filter.begin(100);
 
   // "value" is from 0 to 1023
   //   512 is resting position
@@ -42,13 +45,18 @@ void loop() {
   if (imu.available()){
     imu.readMotionSensor(ax, ay, az, gx, gy, gz, mx, my, mz);
 
-    deltat = fusion.deltatUpdate();
-    //fusion.MahonyUpdate(gx, gy, gz, ax, ay, az, mx, my, mz, deltat);  //mahony is suggested if there isn't the mag
-    fusion.MadgwickUpdate(gx, gy, gz, ax, ay, az, mx, my, mz, deltat);  //else use the magwick
+    // note - this may not be needed?
+    // NXPMotionSense gyroscope uses degrees/second
+    // Mahony expects gyroscope in radians/second
+    gx = gx * gyroScale;
+    gy = gy * gyroScale;
+    gz = gz * gyroScale;
 
-    yaw = fusion.getYaw();
-    roll = fusion.getRoll();
-    pitch = fusion.getPitch();
+    filter.update(gx, gy, gz, ax, ay, az, mx, my, mz); 
+
+    yaw = filter.getYaw();
+    roll = filter.getRoll();
+    pitch = filter.getPitch();
     
 
     Serial.print("Orientation: ");
@@ -85,17 +93,17 @@ void setJoyHeading(float z){
     temp = 1023;
   }
 
-  Serial.print("Heading: ")
+  Serial.print("Heading: ");
   Serial.print(head);
-  Serial.print(" : ")
-  Serial.print(temp)
+  Serial.print(" : ");
+  Serial.print(temp);
   Serial.print(" ");
 
   Joystick.Z(temp);
 }
 
 void setJoyPitch(float y){
-  int temp = (x - pitchCenter) * pitchFactor;
+  int temp = (y - pitchCenter) * pitchFactor;
 
   if (temp < 0){
     temp = 0;
@@ -103,8 +111,8 @@ void setJoyPitch(float y){
     temp = 1023;
   }
 
-  Serial.print("Pitch: ")
-  Serial.print(temp)
+  Serial.print("Pitch: ");
+  Serial.print(temp);
   Serial.print(" ");
 
   Joystick.Y(temp);
@@ -119,8 +127,8 @@ void setJoyRoll(float x){
     temp = 1023;
   }
 
-  Serial.print("Roll: ")
-  Serial.print(temp)
+  Serial.print("Roll: ");
+  Serial.print(temp);
   Serial.print(" ");
 
   Joystick.X(temp);
