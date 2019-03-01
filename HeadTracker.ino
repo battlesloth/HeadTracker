@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <NXPMotionSense.h>
-#include <SensorFusion.h>
+#include <MahonyAHRS.h>
 #include <Wire.h>
 #include <EEPROM.h>
 
@@ -21,9 +21,20 @@ const int pitchRange = 40;
 const int rollRange = 40;
 
 
+
+float pitchFactor;
+float rollFactor;
+
 void setup() {
   Serial.begin(9600);
-  imu.begin();  
+  imu.begin();
+
+  // "value" is from 0 to 1023
+  //   512 is resting position
+  pitchFactor = 1024 / pitchRange;
+  rollFactor = 1024 / rollRange;
+  headingFactor = 1024 / headingRange;
+
 }
 
 void loop() {
@@ -46,13 +57,11 @@ void loop() {
     Serial.print(pitch);
     Serial.print(" ");
     Serial.println(roll);
-
+    Serial.print(" ; ");
     
-
-    //Joystick.X(value);            // "value" is from 0 to 1023
-    //Joystick.Y(value);            //   512 is resting position
-    //Joystick.Z(value);
-    //Joystick.Zrotate(value);
+    setJoyHeading(yaw);
+    setJoyPitch(pitch);
+    setJoyRoll(roll);
   }
 }
 
@@ -64,3 +73,57 @@ int getHeading(const int center, const int reading)
 	int distance = 180 - abs(abs(modDiff) - 180);
 	return (modDiff + 360) % 360 < 180 ? distance : distance *= -1;
 }
+
+void setJoyHeading(float z){
+
+  int head = getHeading(headingCenter, z);
+  int temp = head * headingFactor;
+
+  if (temp < 0){
+    temp = 0;
+  } else if (temp > 1023){
+    temp = 1023;
+  }
+
+  Serial.print("Heading: ")
+  Serial.print(head);
+  Serial.print(" : ")
+  Serial.print(temp)
+  Serial.print(" ");
+
+  Joystick.Z(temp);
+}
+
+void setJoyPitch(float y){
+  int temp = (x - pitchCenter) * pitchFactor;
+
+  if (temp < 0){
+    temp = 0;
+  } else if (temp > 1023){
+    temp = 1023;
+  }
+
+  Serial.print("Pitch: ")
+  Serial.print(temp)
+  Serial.print(" ");
+
+  Joystick.Y(temp);
+}
+
+void setJoyRoll(float x){
+  int temp = (x - rollCenter) * rollFactor;
+
+  if (temp < 0){
+    temp = 0;
+  } else if (temp > 1023){
+    temp = 1023;
+  }
+
+  Serial.print("Roll: ")
+  Serial.print(temp)
+  Serial.print(" ");
+
+  Joystick.X(temp);
+}
+
+
